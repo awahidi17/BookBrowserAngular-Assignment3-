@@ -1,0 +1,124 @@
+<div class="page-shell">
+  <section class="hero hero--catalog">
+    <div class="hero-copy">
+      <p class="tag">Book Browser</p>
+      <h1>Curated reads in a modern Angular library</h1>
+      <p class="subtitle">
+        Browse unique titles, search instantly, sort your catalog, and keep track of favorites with a cleaner visual experience.
+      </p>
+    </div>
+
+    <div class="hero-card panel">
+      <p class="eyebrow">Library tools</p>
+      <div class="hero-card__stats">
+        <div>
+          <strong>{{ books().length }}</strong>
+          <span>Total books</span>
+        </div>
+        <div>
+          <strong>{{ filteredBooks().length }}</strong>
+          <span>Results</span>
+        </div>
+        <div>
+          <strong>{{ store.favoriteCount() }}</strong>
+          <span>Favorites</span>
+        </div>
+      </div>
+      <div class="actions">
+        <a class="button" routerLink="/books/new">Add book</a>
+        <button class="button secondary" type="button" (click)="store.toggleFavoritesOnly()">
+          {{ store.showFavoritesOnly() ? 'Show all' : 'Favorites only' }}
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel toolbar toolbar--premium">
+    <div class="field">
+      <label for="search">Search collection</label>
+      <input
+        id="search"
+        type="text"
+        [ngModel]="store.searchTerm()"
+        (ngModelChange)="onSearchChange($event)"
+        placeholder="Title, author, or genre"
+      />
+    </div>
+
+    <div class="field">
+      <label for="sort">Sort by</label>
+      <select id="sort" [ngModel]="store.sortBy()" (ngModelChange)="onSortChange($event)">
+        <option value="title">Title</option>
+        <option value="author">Author</option>
+        <option value="year">Year</option>
+      </select>
+    </div>
+
+    <div class="field toggle-field">
+      <label for="favoritesMode">View mode</label>
+      <button id="favoritesMode" class="mode-chip" type="button" (click)="store.toggleFavoritesOnly()">
+        <span class="dot"></span>
+        {{ store.showFavoritesOnly() ? 'Favorites only' : 'All books' }}
+      </button>
+    </div>
+
+    <div class="field field-action">
+      <label>&nbsp;</label>
+      <button class="button secondary" type="button" (click)="loadBooks()">Refresh</button>
+    </div>
+  </section>
+
+  @if (loading()) {
+    <div class="status-box loading">Loading books...</div>
+  }
+
+  @if (error()) {
+    <div class="status-box error">{{ error() }}</div>
+  }
+
+  @if (!loading() && !error() && filteredBooks().length === 0) {
+    <div class="panel empty-state">
+      <h2 class="section-title">No matching books found</h2>
+      <p class="subtitle">Try another keyword or switch back to the full catalog.</p>
+    </div>
+  }
+
+  @if (!loading() && filteredBooks().length > 0) {
+    <section class="book-grid premium-grid">
+      @for (book of filteredBooks(); track book.id) {
+        <article class="card book-card book-card--premium">
+          <div class="book-cover-wrap">
+            <img class="book-cover" [src]="book.imageUrl" (error)="book.imageUrl = '/assets/covers/web-basics.png'" [alt]="book.title + ' cover'" />
+            <button
+              class="favorite-toggle"
+              type="button"
+              (click)="toggleFavorite(book.id)"
+              [attr.aria-label]="store.isFavorite(book.id) ? 'Remove favorite' : 'Add favorite'"
+            >
+              {{ store.isFavorite(book.id) ? '★' : '☆' }}
+            </button>
+          </div>
+
+          <div class="book-card__body">
+            <div class="book-card__header">
+              <span class="tag">{{ book.genre }}</span>
+              <span class="year-chip">{{ book.year }}</span>
+            </div>
+
+            <div>
+              <h3>{{ book.title }}</h3>
+              <p class="author-line">{{ book.author }}</p>
+            </div>
+
+            <p class="book-description">{{ book.description }}</p>
+
+            <div class="inline-actions card-actions">
+              <a class="button" [routerLink]="['/books', book.id]">Details</a>
+              <a class="button secondary" [routerLink]="['/books', book.id, 'edit']">Edit</a>
+            </div>
+          </div>
+        </article>
+      }
+    </section>
+  }
+</div>

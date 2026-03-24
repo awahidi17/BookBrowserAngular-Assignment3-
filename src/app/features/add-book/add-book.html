@@ -1,0 +1,68 @@
+<div class="page-shell">
+  <a class="back-link" routerLink="/books">← Back to catalog</a>
+
+  <section class="hero">
+    <div>
+      <p class="tag">Create</p>
+      <h1>Add a new book</h1>
+      <p class="subtitle">Enter catalog details and choose a local cover image from the project assets folder.</p>
+    </div>
+  </section>
+
+  @if (error) {
+    <div class="status-box error">{{ error }}</div>
+  }
+
+  <form class="panel form-grid" [formGroup]="bookForm" (ngSubmit)="submit()">
+    <div class="field">
+      <label for="title">Title</label>
+      <input id="title" type="text" formControlName="title" />
+      @if (bookForm.controls.title.touched && bookForm.controls.title.invalid) {
+        <div class="error-text">Enter a title with at least 2 characters.</div>
+      }
+    </div>
+
+    <div class="field">
+      <label for="author">Author</label>
+      <input id="author" type="text" formControlName="author" />
+      @if (bookForm.controls.author.touched && bookForm.controls.author.invalid) {
+        <div class="error-text">Enter an author name with at least 2 characters.</div>
+      }
+    </div>
+
+    <div class="field">
+      <label for="genre">Genre</label>
+      <input id="genre" type="text" formControlName="genre" />
+      @if (bookForm.controls.genre.touched && bookForm.controls.genre.invalid) {
+        <div class="error-text">Enter a genre.</div>
+      }
+    </div>
+
+    <div class="field">
+      <label for="year">Year</label>
+      <input id="year" type="number" formControlName="year" />
+      @if (bookForm.controls.year.touched && bookForm.controls.year.invalid) {
+        <div class="error-text">Enter a valid year.</div>
+      }
+    </div>
+
+    <div class="field full">
+      <label for="imageUrl">Cover image path</label>
+      <input id="imageUrl" type="text" formControlName="imageUrl" placeholder="/assets/covers/your-cover.svg" />
+      <div class="helper-text">Example: /assets/covers/systems-blueprint.svg</div>
+    </div>
+
+    <div class="field full">
+      <label for="description">Description</label>
+      <textarea id="description" formControlName="description"></textarea>
+      @if (bookForm.controls.description.touched && bookForm.controls.description.invalid) {
+        <div class="error-text">Description must be at least 15 characters.</div>
+      }
+    </div>
+
+    <div class="inline-actions">
+      <button class="button" type="submit">Save book</button>
+      <a class="button secondary" routerLink="/books">Cancel</a>
+    </div>
+  </form>
+</div>

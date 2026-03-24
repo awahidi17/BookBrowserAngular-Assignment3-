@@ -1,0 +1,57 @@
+<div class="page-shell">
+  <a class="back-link" routerLink="/books">← Back to catalog</a>
+
+  @if (loading()) {
+    <div class="status-box loading">Loading book details...</div>
+  }
+
+  @if (error()) {
+    <div class="status-box error">{{ error() }}</div>
+  }
+
+  @if (book(); as currentBook) {
+    <section class="detail-hero card">
+      <div class="detail-cover-panel">
+        <img class="detail-cover" [src]="currentBook.imageUrl" (error)="currentBook.imageUrl = '/assets/covers/web-basics.png'" [alt]="currentBook.title + ' cover'" />
+      </div>
+
+      <div class="detail-main">
+        <div class="inline-actions" style="justify-content: space-between; align-items: center;">
+          <span class="tag">{{ currentBook.genre }}</span>
+          <span class="year-chip">{{ currentBook.year }}</span>
+        </div>
+
+        <h1>{{ currentBook.title }}</h1>
+        <p class="subtitle">By {{ currentBook.author }}</p>
+        <p class="detail-copy">{{ currentBook.description }}</p>
+
+        <div class="actions">
+          <button class="button secondary" type="button" (click)="toggleFavorite()">
+            {{ store.isFavorite(currentBook.id) ? 'Remove favorite' : 'Add favorite' }}
+          </button>
+          <a class="button" [routerLink]="['/books', currentBook.id, 'edit']">Edit book</a>
+          <button class="button danger" type="button" (click)="deleteBook()">Delete book</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="detail-layout detail-layout--premium">
+      <article class="panel">
+        <h2 class="section-title">About this book</h2>
+        <p class="detail-copy">{{ currentBook.description }}</p>
+      </article>
+
+      <aside class="panel">
+        <h2 class="section-title">Catalog details</h2>
+        <div class="summary-list">
+          <div><span>ID</span><strong>{{ currentBook.id }}</strong></div>
+          <div><span>Author</span><strong>{{ currentBook.author }}</strong></div>
+          <div><span>Genre</span><strong>{{ currentBook.genre }}</strong></div>
+          <div><span>Year</span><strong>{{ currentBook.year }}</strong></div>
+          <div><span>Favorite</span><strong>{{ store.isFavorite(currentBook.id) ? 'Yes' : 'No' }}</strong></div>
+          <div><span>Selected signal</span><strong>{{ store.selectedBookId() }}</strong></div>
+        </div>
+      </aside>
+    </section>
+  }
+</div>

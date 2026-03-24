@@ -1,0 +1,58 @@
+<div class="page-shell">
+  <a class="back-link" [routerLink]="['/books', bookId]">← Back to details</a>
+
+  <section class="hero">
+    <div>
+      <p class="tag">Update</p>
+      <h1>Edit book</h1>
+      <p class="subtitle">Update the catalog information and change the cover path if needed.</p>
+    </div>
+  </section>
+
+  @if (loading()) {
+    <div class="status-box loading">Loading current book data...</div>
+  }
+
+  @if (error()) {
+    <div class="status-box error">{{ error() }}</div>
+  }
+
+  @if (!loading()) {
+    <form class="panel form-grid" [formGroup]="bookForm" (ngSubmit)="submit()">
+      <div class="field">
+        <label for="title">Title</label>
+        <input id="title" type="text" formControlName="title" />
+      </div>
+
+      <div class="field">
+        <label for="author">Author</label>
+        <input id="author" type="text" formControlName="author" />
+      </div>
+
+      <div class="field">
+        <label for="genre">Genre</label>
+        <input id="genre" type="text" formControlName="genre" />
+      </div>
+
+      <div class="field">
+        <label for="year">Year</label>
+        <input id="year" type="number" formControlName="year" />
+      </div>
+
+      <div class="field full">
+        <label for="imageUrl">Cover image path</label>
+        <input id="imageUrl" type="text" formControlName="imageUrl" />
+      </div>
+
+      <div class="field full">
+        <label for="description">Description</label>
+        <textarea id="description" formControlName="description"></textarea>
+      </div>
+
+      <div class="inline-actions">
+        <button class="button" type="submit">Save changes</button>
+        <a class="button secondary" [routerLink]="['/books', bookId]">Cancel</a>
+      </div>
+    </form>
+  }
+</div>
